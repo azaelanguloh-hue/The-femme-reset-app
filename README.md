@@ -1,2 +1,3 @@
-# The-femme-reset-app
-App TFRM
+# The Femme Reset App (PWA)
+
+Hub de herramientas (Sueño + Cortisol). Deploy en Vercel.

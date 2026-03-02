@@ -1,0 +1,73 @@
+{
+  "title": "Sueño reparador",
+  "subtitle": "Modo Noche • rutina guiada",
+  "routines": [
+    {
+      "id": "sleep_15",
+      "name": "Rutina 15 min",
+      "steps": [
+        {
+          "label": "Brain dump (2 min)",
+          "type": "note",
+          "seconds": 120
+        },
+        {
+          "label": "Respiración (3 min)",
+          "type": "breath",
+          "seconds": 180,
+          "pattern": {
+            "inhale": 4,
+            "exhale": 6
+          }
+        },
+        {
+          "label": "Cierre sin pantalla (10 min)",
+          "type": "timer",
+          "seconds": 600
+        }
+      ]
+    },
+    {
+      "id": "sleep_30",
+      "name": "Rutina 30 min",
+      "steps": [
+        {
+          "label": "Brain dump (5 min)",
+          "type": "note",
+          "seconds": 300
+        },
+        {
+          "label": "Descarga corporal (8 min)",
+          "type": "timer",
+          "seconds": 480
+        },
+        {
+          "label": "Respiración (5 min)",
+          "type": "breath",
+          "seconds": 300,
+          "pattern": {
+            "inhale": 4,
+            "exhale": 6
+          }
+        },
+        {
+          "label": "Cierre sin pantalla (12 min)",
+          "type": "timer",
+          "seconds": 720
+        }
+      ]
+    }
+  ],
+  "checklist": [
+    "Pantallas fuera 45–60 min",
+    "Luz baja / ambiente calmado",
+    "Respiración 3–5 min",
+    "Cena ligera (cuando se pueda)",
+    "Hora similar"
+  ],
+  "middleOfNight": [
+    "No revises el celular",
+    "10 respiraciones lentas",
+    "Audio suave (sin pantalla)"
+  ]
+}
