@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import ServiceWorkerRegisterer from '../components/ServiceWorkerRegisterer';
-...
-<ServiceWorkerRegisterer />
+import ServiceWorkerRegister from '../components/ServiceWorkerRegisterer';
 
 export const metadata: Metadata = {
   title: 'The Femme Reset App',
@@ -17,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body>
-        <ServiceWorkerRegisterer />
+        <ServiceWorkerRegister />
         <div className="container">{children}</div>
       </body>
     </html>
