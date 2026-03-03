@@ -1,11 +1,10 @@
 'use client';
 import Link from 'next/link';
-import sleep from '@/content/sleep.json';
-import phrases from '@/content/phrases.json';
+import sleep from "../../content/sleep.json";
+import phrases from "../../content/phrases.json";
 import React,{useMemo,useState} from 'react';
-import { StepTimer } from '@/components/StepTimer';
-import { BreathStep } from '@/components/BreathStep';
-
+import StepTimer from "../../components/StepTimer";
+import BreathStep from "../../components/BreathStep";
 type Step = { label:string; type:'note'|'timer'|'breath'; seconds:number; pattern?:{inhale:number; exhale:number} };
 
 export default function Sleep(){
