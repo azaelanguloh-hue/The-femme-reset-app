@@ -1,79 +1,8 @@
 {
   "title": "Reset cortisol",
-  "subtitle": "Botón de rescate • 3–10 min",
-  "flows": [
-    {
-      "id": "cortisol_3",
-      "name": "Reseteo 3 min (SOS)",
-      "steps": [
-        {
-          "label": "Suspiro fisiológico x5",
-          "type": "breath_count",
-          "count": 5
-        },
-        {
-          "label": "Exhalo largo (60s)",
-          "type": "breath_timer",
-          "seconds": 60,
-          "pattern": {
-            "inhale": 3,
-            "exhale": 6
-          }
-        },
-        {
-          "label": "Aterriza (60s)",
-          "type": "timer",
-          "seconds": 60
-        }
-      ]
-    },
-    {
-      "id": "cortisol_10",
-      "name": "Reseteo 10 min",
-      "steps": [
-        {
-          "label": "Respiración (4 min)",
-          "type": "breath",
-          "seconds": 240,
-          "pattern": {
-            "inhale": 4,
-            "exhale": 6
-          }
-        },
-        {
-          "label": "Estiramiento suave (4 min)",
-          "type": "timer",
-          "seconds": 240
-        },
-        {
-          "label": "Cierre (2 min)",
-          "type": "note",
-          "seconds": 120
-        }
-      ]
-    },
-    {
-      "id": "brain_dump",
-      "name": "Brain dump (2 min)",
-      "steps": [
-        {
-          "label": "Escribe lo que traes (2 min)",
-          "type": "note",
-          "seconds": 120
-        }
-      ]
-    }
-  ],
-  "feelings": [
-    "Ansiedad",
-    "Saturación",
-    "Antojo",
-    "Enojo",
-    "Nervios"
-  ],
-  "quickTips": [
-    "Agua / respiración primero",
-    "Sin culpa: solo regresa al plan",
-    "Baja estímulos (luz/pantallas)"
+  "buttons": [
+    { "id": "3min", "name": "Reseteo 3 min", "seconds": 180, "hint": "Exhala más largo. Baja hombros." },
+    { "id": "10min", "name": "Reseteo 10 min", "seconds": 600, "hint": "Luz baja. Suelta mandíbula." },
+    { "id": "dump", "name": "Brain dump 2 min", "seconds": 120, "hint": "Escribe lo que te pesa, sin filtro." }
   ]
 }
