@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import AudioMeditation from '../components/AudioMeditation';
 export default function Home(){
   return (
     <>
@@ -27,6 +28,7 @@ export default function Home(){
           Android: menú ⋮ → “Instalar app”.
         </div>
       </div>
+<AudioMeditation />
     </>
   );
 }
