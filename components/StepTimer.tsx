@@ -22,3 +22,4 @@ export function StepTimer({seconds,onDone}:{seconds:number;onDone:()=>void}){
     </div>
   );
 }
+export default StepTimer;
