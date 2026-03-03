@@ -1,8 +1,22 @@
 {
-  "title": "Reset cortisol",
-  "buttons": [
-    { "id": "3min", "name": "Reseteo 3 min", "seconds": 180, "hint": "Exhala más largo. Baja hombros." },
-    { "id": "10min", "name": "Reseteo 10 min", "seconds": 600, "hint": "Luz baja. Suelta mandíbula." },
-    { "id": "dump", "name": "Brain dump 2 min", "seconds": 120, "hint": "Escribe lo que te pesa, sin filtro." }
+  "flows": [
+    {
+      "id": "rescate-3",
+      "name": "Rescate 3 min",
+      "steps": [
+        { "label": "Respira 4/6", "type": "breath", "seconds": 90, "pattern": { "inhale": 4, "exhale": 6 } },
+        { "label": "Suelta hombros", "type": "timer", "seconds": 60 },
+        { "label": "Una frase", "type": "note", "seconds": 30 }
+      ]
+    },
+    {
+      "id": "rescate-10",
+      "name": "Rescate 10 min",
+      "steps": [
+        { "label": "Respira 4/6", "type": "breath", "seconds": 180, "pattern": { "inhale": 4, "exhale": 6 } },
+        { "label": "Pausa sin pantalla", "type": "timer", "seconds": 240 },
+        { "label": "Cierre", "type": "note", "seconds": 180 }
+      ]
+    }
   ]
 }
