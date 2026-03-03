@@ -1,24 +1,22 @@
 {
-  "title": "Sueño reparador",
-  "modes": [
+  "routines": [
     {
       "id": "15",
-      "name": "Rutina A (15 min)",
+      "name": "Rutina 15 min",
       "steps": [
-        { "title": "Brain dump", "seconds": 120, "hint": "Escribe 3 pendientes para mañana." },
-        { "title": "Respiración 4/6", "seconds": 180, "hint": "Inhala 4, exhala 6." },
-        { "title": "Cierre sin pantalla", "seconds": 600, "hint": "Lectura ligera o audio suave." }
+        { "label": "Brain dump", "type": "note", "seconds": 120 },
+        { "label": "Respira 4/6", "type": "breath", "seconds": 180, "pattern": { "inhale": 4, "exhale": 6 } },
+        { "label": "Cierre sin pantalla", "type": "timer", "seconds": 600 }
       ]
     },
     {
       "id": "30",
-      "name": "Rutina B (30 min)",
+      "name": "Rutina 30 min",
       "steps": [
-        { "title": "Brain dump + gratitud", "seconds": 300, "hint": "3 cosas para mañana + 1 gratitud." },
-        { "title": "Descarga corporal", "seconds": 480, "hint": "Estiramiento suave." },
-        { "title": "Respiración 4/6", "seconds": 300, "hint": "Exhala más largo." },
-        { "title": "Ambiente", "seconds": 120, "hint": "Luz baja, cuarto fresco." },
-        { "title": "Cierre sin pantalla", "seconds": 600, "hint": "Lectura o audio." }
+        { "label": "Brain dump + gratitud", "type": "note", "seconds": 300 },
+        { "label": "Descarga corporal", "type": "timer", "seconds": 480 },
+        { "label": "Respira 4/6", "type": "breath", "seconds": 300, "pattern": { "inhale": 4, "exhale": 6 } },
+        { "label": "Cierre sin pantalla", "type": "timer", "seconds": 720 }
       ]
     }
   ]
