@@ -1,135 +1,261 @@
 'use client';
+
 import Link from 'next/link';
-import sleep from "../../content/sleep.json";
-import phrases from "../../content/phrases.json";
-import React,{useMemo,useState} from 'react';
-import StepTimer from "../../components/StepTimer";
-import BreathStep from "../../components/BreathStep";
-type Step = { label:string; type:'note'|'timer'|'breath'; seconds:number; pattern?:{inhale:number; exhale:number} };
+import React, { useMemo, useState } from 'react';
 
-export default function Sleep(){
-  const [mode,setMode]=useState<'home'|'routine'|'checklist'|'midnight'>('home');
-  const [routineId,setRoutineId]=useState<string>(sleep.routines[0].id);
-  const routine=useMemo(()=>sleep.routines.find((r:any)=>r.id===routineId) ?? sleep.routines[0],[routineId]);
-  const [stepIndex,setStepIndex]=useState(0);
-  const [note,setNote]=useState('');
-  const [msg,setMsg]=useState('');
+import sleepData from '../../content/sleep.json';
+import phrasesData from '../../content/phrases.json';
 
-  const step:Step = routine.steps[stepIndex] as any;
+import StepTimer from '../../components/StepTimer';
+import BreathStep from '../../components/BreathStep';
 
-  function doneStep(){
-    if(stepIndex < routine.steps.length-1) setStepIndex(stepIndex+1);
-    else { setMsg(phrases[Math.floor(Math.random()*phrases.length)]); setMode('home'); setStepIndex(0); }
+type StepType = 'note' | 'timer' | 'breath';
+
+type Step = {
+  label: string;
+  type: StepType;
+  seconds: number;
+  pattern?: { inhale: number; exhale: number };
+};
+
+type Routine = {
+  id: string;
+  name: string;
+  steps: Step[];
+};
+
+function safeArray<T>(v: any): T[] {
+  return Array.isArray(v) ? (v as T[]) : [];
+}
+
+function pickRandom(arr: string[]) {
+  if (!arr.length) return '';
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+const CHECKLIST = [
+  'Atenúa luces (modo noche)',
+  'Sin pantallas 30–60 min antes',
+  'Cena ligera (si aplica)',
+  'Deja agua a la mano',
+  'Habitación fresca y oscura',
+  'Respira 2 minutos (4/6)',
+];
+
+const IF_WAKE_UP = [
+  'No mires el celular',
+  'Respira 6 ciclos (4/6)',
+  'Relaja mandíbula y hombros',
+  'Si pasan 20 min: levántate, luz baja, vuelve a la cama',
+  'Repite: “Estoy a salvo. Puedo volver.”',
+];
+
+export default function Sleep() {
+  const ROUTINES = safeArray<Routine>((sleepData as any)?.routines);
+  const PHRASES = safeArray<string>(phrasesData);
+
+  const [view, setView] = useState<'home' | 'routine' | 'checklist' | 'wake'>('home');
+
+  const [routineId, setRoutineId] = useState<string>(ROUTINES[0]?.id ?? '');
+  const routine = useMemo(() => {
+    const found = ROUTINES.find((r) => r.id === routineId);
+    return found ?? ROUTINES[0] ?? null;
+  }, [ROUTINES, routineId]);
+
+  const steps = useMemo(() => safeArray<Step>((routine as any)?.steps), [routine]);
+  const [stepIndex, setStepIndex] = useState(0);
+
+  const [note, setNote] = useState('');
+  const [msg, setMsg] = useState('');
+
+  function resetRun() {
+    setStepIndex(0);
+    setNote('');
   }
 
+  function startRoutine() {
+    if (!routine) return;
+    resetRun();
+    setView('routine');
+  }
+
+  function nextStep() {
+    const next = stepIndex + 1;
+    if (next < steps.length) {
+      setStepIndex(next);
+      return;
+    }
+    setMsg(pickRandom(PHRASES) || 'Bien. Hoy es progreso, no perfección.');
+    setView('home');
+  }
+
+  const step = steps[stepIndex] ?? null;
+
   return (
-    <>
-      <div className="row" style={{justifyContent:'space-between'}}>
-        <Link href="/" className="pill">← Inicio</Link>
-        <span className="pill">🌙 Sueño</span>
+    <div className="container">
+      <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ margin: 0 }}>Sueño reparador</h1>
+        <Link className="pill" href="/">
+          Volver
+        </Link>
       </div>
 
-      <div className="h1">Sueño reparador</div>
-      <p className="p">Elige una rutina y déjate guiar.</p>
-
-      {msg && <div className="notice" style={{marginBottom:14}}><b>{msg}</b></div>}
-
-      {mode==='home' && (
-        <div className="grid">
-          <div className="card">
-            <div style={{fontWeight:900, marginBottom:8}}>Rutina guiada</div>
-            <div className="row" style={{marginBottom:10}}>
-              {sleep.routines.map((r:any)=>(
-                <button key={r.id} className="pill" onClick={()=>{setRoutineId(r.id); setStepIndex(0);}}>{r.name}</button>
-              ))}
-            </div>
-            <button className="bigbtn" onClick={()=>setMode('routine')}>
-              <span>Iniciar rutina</span><span className="badge">{routine.name}</span>
-            </button>
-          </div>
-
-          <div className="card">
-            <div style={{fontWeight:900, marginBottom:8}}>Atajos</div>
-            <button className="bigbtn" onClick={()=>setMode('checklist')}>
-              <span>Checklist express</span><span className="badge">Abrir</span>
-            </button>
-            <div style={{height:10}} />
-            <button className="bigbtn" onClick={()=>setMode('midnight')}>
-              <span>Si me despierto en la madrugada</span><span className="badge">Abrir</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {mode==='routine' && (
+      {/* HOME */}
+      {view === 'home' && (
         <>
-          <div className="card">
-            <div style={{fontWeight:900, marginBottom:6}}>{routine.name}</div>
-            <div className="small">Paso {stepIndex+1} de {routine.steps.length}: <b>{step.label}</b></div>
+          <div className="card" style={{ marginTop: 12 }}>
+            <div style={{ fontWeight: 900, marginBottom: 8 }}>Elige tu rutina</div>
+
+            <select
+              className="pill"
+              value={routineId}
+              onChange={(e) => {
+                setRoutineId(e.target.value);
+                resetRun();
+              }}
+              style={{ width: '100%' }}
+            >
+              {ROUTINES.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name || r.id}
+                </option>
+              ))}
+            </select>
+
+            <div className="row" style={{ gap: 10, marginTop: 12 }}>
+              <button className="pill" onClick={startRoutine} disabled={!routine}>
+                Iniciar rutina
+              </button>
+              <button
+                className="pill"
+                onClick={() => setMsg(pickRandom(PHRASES))}
+              >
+                Frase motivadora
+              </button>
+            </div>
+
+            {msg ? <div className="card" style={{ marginTop: 12 }}>{msg}</div> : null}
           </div>
 
-          <div style={{height:12}} />
-
-          {step.type==='note' && (
-            <div className="card">
-              <textarea className="input" placeholder="Escribe 3 cosas para soltar (brain dump)..." value={note} onChange={(e)=>setNote(e.target.value)} />
-              <div style={{height:10}} />
-              <StepTimer seconds={step.seconds} onDone={doneStep} />
+          <div className="card" style={{ marginTop: 12 }}>
+            <div style={{ fontWeight: 900, marginBottom: 10 }}>Atajos</div>
+            <div className="row" style={{ gap: 10, flexWrap: 'wrap' }}>
+              <button className="pill" onClick={() => setView('checklist')}>
+                ✅ Checklist noche
+              </button>
+              <button className="pill" onClick={() => setView('wake')}>
+                🌙 Si me despierto
+              </button>
             </div>
-          )}
-
-          {step.type==='timer' && (
-            <div className="card">
-              <StepTimer seconds={step.seconds} onDone={doneStep} />
-            </div>
-          )}
-
-          {step.type==='breath' && (
-            <div className="card">
-              <BreathStep seconds={step.seconds} inhale={step.pattern?.inhale ?? 4} exhale={step.pattern?.exhale ?? 6} onDone={doneStep} />
-            </div>
-          )}
-
-          <div style={{height:12}} />
-          <div className="row">
-            <button className="pill" onClick={()=>{setMode('home'); setStepIndex(0);}}>Salir</button>
-            <button className="pill" onClick={doneStep}>Siguiente</button>
           </div>
         </>
       )}
 
-      {mode==='checklist' && (
-        <Checklist title="Checklist express" items={sleep.checklist} onBack={()=>setMode('home')} onSave={(m)=>setMsg(m)} />
+      {/* CHECKLIST */}
+      {view === 'checklist' && (
+        <div className="card" style={{ marginTop: 12 }}>
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontWeight: 900 }}>Checklist noche</div>
+            <button className="pill" onClick={() => setView('home')}>Volver</button>
+          </div>
+
+          <div style={{ marginTop: 10, display: 'grid', gap: 10 }}>
+            {CHECKLIST.map((item, idx) => (
+              <div key={idx} className="card" style={{ padding: 14 }}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
-      {mode==='midnight' && (
-        <Checklist title="Si me despierto en la madrugada" items={sleep.middleOfNight} onBack={()=>setMode('home')} onSave={(m)=>setMsg(m)} />
-      )}
-    </>
-  );
-}
+      {/* WAKE UP */}
+      {view === 'wake' && (
+        <div className="card" style={{ marginTop: 12 }}>
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontWeight: 900 }}>Si me despierto</div>
+            <button className="pill" onClick={() => setView('home')}>Volver</button>
+          </div>
 
-function Checklist({title,items,onBack,onSave}:{title:string;items:string[];onBack:()=>void;onSave:(m:string)=>void}){
-  const [checks,setChecks]=useState<boolean[]>(items.map(()=>false));
-  const toggle=(i:number)=>setChecks(prev=>prev.map((v,idx)=>idx===i?!v:v));
-  return (
-    <>
-      <div className="card">
-        <div style={{fontWeight:900,fontSize:20}}>{title}</div>
-        <p className="p" style={{marginTop:6}}>Marca lo que puedas. 1 cosa también cuenta.</p>
-        <hr className="sep" />
-        {items.map((it,i)=>(
-          <label key={i} className="bigbtn" style={{justifyContent:'flex-start'}}>
-            <input type="checkbox" checked={checks[i]} onChange={()=>toggle(i)} style={{width:20,height:20,marginRight:12}} />
-            <span>{it}</span>
-          </label>
-        ))}
-      </div>
-      <div style={{height:12}} />
-      <div className="row">
-        <button className="pill" onClick={onBack}>← Volver</button>
-        <button className="pill" onClick={()=>onSave(phrases[Math.floor(Math.random()*phrases.length)])}>Guardar</button>
-      </div>
-    </>
+          <div style={{ marginTop: 12 }}>
+            <BreathStep title="Respira 4/6" cycles={6} inhale={4} exhale={6} />
+          </div>
+
+          <div style={{ marginTop: 12, display: 'grid', gap: 10 }}>
+            {IF_WAKE_UP.map((item, idx) => (
+              <div key={idx} className="card" style={{ padding: 14 }}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ROUTINE RUNNER */}
+      {view === 'routine' && routine && (
+        <div className="card" style={{ marginTop: 12 }}>
+          <div style={{ fontWeight: 900 }}>{routine.name}</div>
+          <div className="small" style={{ marginTop: 6 }}>
+            Paso {Math.min(stepIndex + 1, steps.length)} de {steps.length}
+          </div>
+
+          <div style={{ marginTop: 14, fontSize: 18, fontWeight: 900 }}>
+            {step?.label ?? 'Paso'}
+          </div>
+
+          <div style={{ marginTop: 12 }}>
+            {step?.type === 'timer' && (
+              <StepTimer seconds={step.seconds ?? 60} onDone={nextStep} />
+            )}
+
+            {step?.type === 'breath' && (
+              <BreathStep
+                title={step.label ?? 'Respira'}
+                cycles={6}
+                inhale={step.pattern?.inhale ?? 4}
+                exhale={step.pattern?.exhale ?? 6}
+              />
+            )}
+
+            {step?.type === 'note' && (
+              <div>
+                <textarea
+                  className="pill"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Escribe 1 línea (brain dump)…"
+                  style={{ width: '100%', minHeight: 110, padding: 14 }}
+                />
+                <div className="small" style={{ marginTop: 8 }}>
+                  Sácalo de tu cabeza y suéltalo.
+                </div>
+              </div>
+            )}
+
+            {!step && (
+              <div className="card">
+                No hay pasos definidos. Revisa <b>content/sleep.json</b>.
+              </div>
+            )}
+          </div>
+
+          <div className="row" style={{ gap: 10, marginTop: 14 }}>
+            <button
+              className="pill"
+              onClick={() => {
+                setView('home');
+                resetRun();
+              }}
+            >
+              Salir
+            </button>
+
+            <button className="pill" onClick={nextStep}>
+              Siguiente
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
