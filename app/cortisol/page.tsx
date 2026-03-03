@@ -1,10 +1,9 @@
 'use client';
 import Link from 'next/link';
-import cortisol from '@/content/cortisol.json';
-import phrases from '@/content/phrases.json';
-import React,{useMemo,useState} from 'react';
-import { StepTimer } from '@/components/StepTimer';
-import { BreathStep } from '@/components/BreathStep';
+import cortisol from "../../content/cortisol.json";
+import phrases from "../../content/phrases.json";
+import StepTimer from "../../components/StepTimer";
+import BreathStep from "../../components/BreathStep";
 
 export default function Cortisol(){
   const [mode,setMode]=useState<'home'|'flow'>('home');
