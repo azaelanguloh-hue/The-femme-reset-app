@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import ServiceWorkerRegister from '../components/ServiceWorkerRegisterer';
+import ServiceWorkerRegister from '../components/ServiceWorkerRegister';
 
 export const metadata: Metadata = {
   title: 'The Femme Reset App',
