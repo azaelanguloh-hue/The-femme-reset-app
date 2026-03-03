@@ -25,3 +25,4 @@ export function BreathStep({seconds,inhale,exhale,onDone}:{seconds:number;inhale
     </div>
   );
 }
+export default BreathStep;
