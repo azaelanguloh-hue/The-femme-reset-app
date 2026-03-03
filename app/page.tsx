@@ -21,12 +21,12 @@ export default function Home(){
       </div>
 
       <hr className="sep" />
-      <div className="card">
-        <div style={{fontWeight:900, marginBottom:6}}>📌 Instalar como app</div>
-        <div className="small">
-          iPhone: Compartir → “Agregar a pantalla de inicio”.<br/>
-          Android: menú ⋮ → “Instalar app”.
-        </div>
+
+<div className="small" style={{ opacity: 0.75, marginTop: 8 }}>
+  <div style={{ fontWeight: 800, marginBottom: 4 }}>Instalar como app</div>
+  iPhone: Compartir → “Agregar a pantalla de inicio”.<br />
+  Android: menú ⋮ → “Instalar app”.
+</div>
       </div>
 <AudioMeditation />
     </>
