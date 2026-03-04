@@ -21,9 +21,11 @@ export default function Home() {
         </Link>
       </div>
 
+      {/* Sonidos relajantes */}
       <AudioMeditation />
 
-      <div style={{ marginTop: 18, opacity: 0.65, fontSize: 12.5, lineHeight: 1.55 }}>
+      {/* Instrucciones discretas hasta abajo */}
+      <div style={{ marginTop: 18, opacity: 0.75, fontSize: 13, lineHeight: 1.5 }}>
         <div style={{ fontWeight: 800, marginBottom: 6 }}>Instalar como app</div>
         <div>
           iPhone: Compartir → “Agregar a pantalla de inicio”.<br />
